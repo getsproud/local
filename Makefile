@@ -1,4 +1,4 @@
-PROJECTS = api-gateway auth-microservice brownbag-microservice budget-microservice category-microservice company-microservice department-microservice email-microservice employee-microservice feedback-microservice local helm-chart react-app
+PROJECTS = api-gateway auth-microservice brownbag-microservice budget-microservice category-microservice company-microservice department-microservice email-microservice employee-microservice training-microservice feedback-microservice local helm-chart react-app
 UTILS = toolbelt docs default-backend
 UNAME := $(shell uname)
 
