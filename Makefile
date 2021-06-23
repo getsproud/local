@@ -2,7 +2,7 @@ PROJECTS = api-gateway auth-microservice brownbag-microservice budget-microservi
 UTILS = toolbelt docs default-backend
 UNAME := $(shell uname)
 
-.PHONY: projects install utils clean
+.PHONY: projects install utils clean commit-all
 
 install:
 		#install helm
@@ -39,6 +39,14 @@ endif
     git clone git@github.com:getsproud/$$v.git 2> /dev/null || echo $$v already exists. Skipping.; \
   done
 
+--check-env:
+ifndef SCOPE
+	$(error SCOPE is undefined)
+endif
+ifndef MESSAGE
+	$(error MESSAGE is undefined)
+endif
+
 utils: ## Checkout sproud. utils
 	@for v in $(UTILS) ; do \
 		echo Cloning $$v ... ; \
@@ -65,13 +73,13 @@ clean: ## Delete sproud. from local space
 		rm -rf sproud-$$v || echo $$v doesnt exist. Skipping.; \
 	done
 
-commit-all: ## Commit all projects
+commit-all: --check-env ## Commit all projects
 	@for v in $(PROJECTS) ; do \
 		echo Commiting changes of $$v ... ; \
 		cd ../sproud-$$v && git add . && git commit -m ':construction_worker: *($(SCOPE)): $(MESSAGE)' --no-verify  &&  git push 2> /dev/null || echo $$v nothing to commit. Skipping.; \
   done
 
-
 .PHONY: help
+
 help: ## Display this help screen
 		@grep -h -E '^[a-z0-9A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
