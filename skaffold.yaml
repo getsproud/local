@@ -4,96 +4,98 @@ metadata:
   name: sproud
 build:
   artifacts:
-  - image: ghcr.io/getsproud/authentication
-    context: ./services/authentication
+  - image: ghcr.io/getsproud/auth
+    context: ../sproud-auth-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/company
-    context: ./services/company
+    context: ../sproud-company-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/employee
-    context: ./services/employee
+    context: ../sproud-employee-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
-  - image: ghcr.io/getsproud/gateway
-    context: ./services/gateway
+      target: production
+  - image: ghcr.io/getsproud/api-gateway
+    context: ../sproud-api-gateway
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
+      buildArgs:
+        NODE_ENV: stage
   - image: ghcr.io/getsproud/training
-    context: ./services/training
+    context: ../sproud-training-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/category
-    context: ./services/category
+    context: ../sproud-category-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/budget
-    context: ./services/budget
+    context: ../sproud-budget-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/feedback
-    context: ./services/feedback
+    context: ../sproud-feedback-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/brownbag
-    context: ./services/brownbag
+    context: ../sproud-brownbag-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/department
-    context: ./services/department
+    context: ../sproud-department-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
+      target: production
   - image: ghcr.io/getsproud/email
-    context: ./services/email
+    context: ../sproud-email-microservice
     sync:
       manual:
       - src: src/**/*.*
         dest: .
     docker:
-      target: builder
-  - image: ghcr.io/getsproud/app
-    context: ./services/app
+      target: production
+  - image: ghcr.io/getsproud/react-app
+    context: ../sproud-react-app
     sync:
       manual:
       - src: src/**/*.*
@@ -106,48 +108,9 @@ build:
       network: bridge
       target: develop
   tagPolicy:
-    sha256: {}
+    gitCommit: {}
   local: {}
 deploy:
   kubectl:
     manifests:
       - helm-rendered.yaml
-profiles:
-  - name: stage
-    patches:
-      - op: replace
-        path: /build/artifacts/0/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/1/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/2/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/3/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/4/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/5/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/6/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/7/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/8/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/9/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/10/docker/
-        value: production
-      - op: replace
-        path: /build/artifacts/11/docker/
-        value: production

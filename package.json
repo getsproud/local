@@ -12,11 +12,7 @@
 	},
 	"scripts": {
 		"release": "CI=true HUSKY_SKIP_HOOKS=1 GITHUB_TOKEN=$(grep GITHUB_TOKEN .env | cut -d '=' -f2) semantic-release  --no-ci",
-		"dev": "kubectl config use-context sproud-dev-k8s && helm template sproud > helm-rendered.yaml && skaffold dev -n sproud --trigger=polling --cleanup=false",
-		"bootstrap": "lerna bootstrap",
-		"lint": "lerna run lint --parallel",
-		"setup": "npm install && npm run bootstrap",
-		"build": "lerna run build --parallel"
+		"dev": "kubectl config use-context sproud-dev-k8s && helm template ../sproud-helm-chart > helm-rendered.yaml && skaffold dev -n sproud --trigger=polling --cleanup=false"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^12.0.1",
