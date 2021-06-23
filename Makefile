@@ -68,7 +68,7 @@ clean: ## Delete sproud. from local space
 commit-all: ## Commit all projects
 	@for v in $(PROJECTS) ; do \
 		echo Commiting changes of $$v ... ; \
-		cd ../sproud-$$v && git add . && git commit -m ':construction_worker: ci(workflow): add ci worklflow' --no-verify  &&  git push 2> /dev/null || echo $$v nothing to commit. Skipping.; \
+		cd ../sproud-$$v && git add . && git commit -m ':construction_worker: *($(SCOPE)): $(MESSAGE)' --no-verify  &&  git push 2> /dev/null || echo $$v nothing to commit. Skipping.; \
   done
 
 
