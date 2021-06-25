@@ -10,7 +10,8 @@ The local development platform has an install script for Linux and Mac. Windows 
 - [skaffold](https://skaffold.dev/)
 - [helm](https://helm.sh/)
 - [kubectl](https://kubernetes.io/de/docs/tasks/tools/)
-- [kubeconfig](rancher.sproud.dev)
+- [telepresence](https://github.com/telepresenceio/telepresence)
+- [kubeconfig](https://rancher.sproud.dev)
 - sproudVPN
 
 ## ⭐ Install **sproud.** for development
@@ -23,12 +24,25 @@ make projects
 ## 🚀 Starting **sproud.** for local development
 To spin up an development enviroment do folling steps.
 
-- create new branch *[feature/123-foo-bar]*
-- run `make develop PROJECT=foo-bar`
-
-  *foo-bar must be a project folder withour the **sproud-** prefix*
+- cd into service folder
+- run `npm run dev`
+- open browser at `https://stage.sproud.dev`
 - start coding 🤩
 
+
+## 🚀 Build feature **sproud.** for testing environment
+To spin up an development enviroment do folling steps.
+
+
+- create new branch [feature/123-foo-bar] in service repo
+
+- run `make feature PROJECT=foo-bar` in sproud-local
+
+**foo-bar must be a project folder withour the sproud- prefix**
+
+- open browser at `https://XXX.sproud.dev`
+
+**replace XXX with number of feature branch**
 
 ## 🤖 **sproud.** Make
 What other commands is the Makefile capable of

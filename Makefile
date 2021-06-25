@@ -20,6 +20,9 @@ ifeq ($(UNAME),Darwin)
 
 		#install kubectl
 		brew install kubernetes-cli
+
+		#install telepresence
+		brew install datawire/blackbird/telepresence
 else
 		#install Skaffold
 		curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
@@ -32,6 +35,10 @@ else
 		echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
 		sudo apt-get update
 		sudo apt-get install -y kubectl
+
+		#install telepresence
+		sudo curl -fL https://app.getambassador.io/download/tel2/linux/amd64/latest/telepresence -o /usr/local/bin/telepresence
+		sudo chmod a+x /usr/local/bin/telepresence
 endif
 
 --clone:
@@ -90,7 +97,7 @@ commit-all: --check-env ## Commit all projects. Needs SCOPE= and MESSAGE= args
 		cd ../sproud-$$v && git add . && git commit -m ':construction_worker: *($(SCOPE)): $(MESSAGE)' --no-verify  &&  git push 2> /dev/null || echo $$v nothing to commit. Skipping.; \
   done
 
-develop: --check-project ## Spin up development enviroment PROJECT=
+feature: --check-project ## Spin up development enviroment PROJECT=
 	@for v in $(PROJECTS) ; do \
 		if [[ "$$v" !=  "$$PROJECT" ]]; then \
 			$$(cd ../sproud-$$v && git checkout main | true && git pull | true) ; \
