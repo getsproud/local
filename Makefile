@@ -1,8 +1,9 @@
-PROJECTS = api-gateway auth-microservice brownbag-microservice budget-microservice category-microservice company-microservice department-microservice email-microservice employee-microservice training-microservice feedback-microservice local helm-chart react-app
+PROJECTS = api-gateway auth-microservice brownbag-microservice budget-microservice category-microservice company-microservice department-microservice email-microservice employee-microservice training-microservice feedback-microservice helm-chart react-app
 UTILS = toolbelt docs default-backend
 UNAME := $(shell uname)
+DEVELOPMENT_PROJECTS = api-gateway auth-microservice brownbag-microservice budget-microservice category-microservice company-microservice department-microservice email-microservice employee-microservice training-microservice feedback-microservice react-app
 
-.PHONY: projects install utils clean commit-all
+.PHONY: projects install utils clean commit-all develop
 
 install:
 		#install helm
@@ -46,6 +47,10 @@ endif
 ifndef MESSAGE
 	$(error MESSAGE is undefined)
 endif
+--check-project:
+ifndef PROJECT
+	$(error PROJECT is undefined)
+endif
 
 utils: ## Checkout sproud. utils
 	@for v in $(UTILS) ; do \
@@ -53,31 +58,52 @@ utils: ## Checkout sproud. utils
     git clone git@github.com:getsproud/$$v.git 2> /dev/null || echo $$v already exists. Skipping.; \
   done
 	@for v in $(UTILS) ; do \
-		rm -rf sproud-$$v ; \
-	 	mv -f $$v sproud-$$v ; \
+		rm -rf ../sproud-$$v ; \
+	 	mv -f $$v ../sproud-$$v ; \
 	done
 
 projects: --clone ## Checkout sproud. project
 	@for v in $(PROJECTS) ; do \
-		rm -rf sproud-$$v ; \
-	 	mv -f $$v sproud-$$v ; \
+		rm -rf ../sproud-$$v ; \
+	 	mv -f $$v ../sproud-$$v ; \
 	done
+
+project: --check-project ## Checkout sproud. single project/microservice. Needs PROJECT=
+	echo Cloning $$PROJECT ...
+	git clone git@github.com:getsproud/$$PROJECT.git 2> /dev/null || echo $$PROJECT already exists. Skipping.
+	rm -rf ../sproud-$$PROJECT
+	mv -f $$PROJECT ../sproud-$$PROJECT
 
 clean: ## Delete sproud. from local space
 	@for v in $(PROJECTS) ; do \
 		echo Removing $$v ... ; \
-		rm -rf sproud-$$v || echo $$v doesnt exist. Skipping.; \
+		rm -rf ../sproud-$$v || echo $$v doesnt exist. Skipping.; \
 	done
 	@for v in $(UTILS) ; do \
 		echo Removing $$v ... ; \
-		rm -rf sproud-$$v || echo $$v doesnt exist. Skipping.; \
+		rm -rf ../sproud-$$v || echo $$v doesnt exist. Skipping.; \
 	done
 
-commit-all: --check-env ## Commit all projects
+commit-all: --check-env ## Commit all projects. Needs SCOPE= and MESSAGE= args
 	@for v in $(PROJECTS) ; do \
 		echo Commiting changes of $$v ... ; \
 		cd ../sproud-$$v && git add . && git commit -m ':construction_worker: *($(SCOPE)): $(MESSAGE)' --no-verify  &&  git push 2> /dev/null || echo $$v nothing to commit. Skipping.; \
   done
+
+develop: --check-project ## Spin up development enviroment PROJECT=
+	@for v in $(PROJECTS) ; do \
+		if [[ "$$v" !=  "$$PROJECT" ]]; then \
+			$$(cd ../sproud-$$v && git checkout main | true && git pull | true) ; \
+		fi \
+	done
+
+	. ./get-feature.sh ${PROJECT}; \
+	echo "Starting development environment for feature $$FEATURE on sproud-$$PROJECT"; \
+	kubectl config use-context sproud-dev-k8s; \
+	kubectl create namespace sproud-feature-$$FEATURE; \
+	kubectl annotate ns --overwrite=true sproud-feature-$$FEATURE field.cattle.io/projectId="c-5nj94:p-zjgp8"; \
+	helm template ../sproud-helm-chart --set subdomain=$$FEATURE. --set redis.namespace=sproud-feature-$$FEATURE > helm-rendered.yaml; \
+	skaffold dev -n sproud-feature-$$FEATURE --trigger=polling --cleanup=false;
 
 .PHONY: help
 

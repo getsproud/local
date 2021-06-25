@@ -2,11 +2,69 @@
   <img width="240" src="sproud-logo.png">
 </p>
 
-<h2 align="center">sproud development platform</h2>
+## 👍 Requirements
+The local development platform has an install script for Linux and Mac. Windows users have to install the required cli tools themselves. Get your VPN config from an admin and your kubeconfig from the [sproud. Rancher](rancher.sproud.dev)
 
-<p align="center">
-  <a href="/docs/stack.md">Tech Stack</a> | <a href="/docs/ideas.md">Brainstorming</a> | <a href="/docs/models.md">Data Models</a>
-</p>
+- [nodejs](https://nodejs.org/)
+- [git](https://git-scm.com/)
+- [skaffold](https://skaffold.dev/)
+- [helm](https://helm.sh/)
+- [kubectl](https://kubernetes.io/de/docs/tasks/tools/)
+- [kubeconfig](rancher.sproud.dev)
+- sproudVPN
 
-KUBE_CONFIG_DATA_STAGE
-YXBpVmVyc2lvbjogdjEKa2luZDogQ29uZmlnCmNsdXN0ZXJzOgotIG5hbWU6ICJzcHJvdWQtZGV2IgogIGNsdXN0ZXI6CiAgICBzZXJ2ZXI6ICJodHRwczovL3JhbmNoZXIuc3Byb3VkLmRldi9rOHMvY2x1c3RlcnMvYy00MnFwbSIKCnVzZXJzOgotIG5hbWU6ICJzcHJvdWQtZGV2IgogIHVzZXI6CiAgICB0b2tlbjogImt1YmVjb25maWctdXNlci02NHA5Nzp3cG1jamdscjZqYnRnaG5tZnRoemNjZHZuNTJqcXM4NHFqbDd3eGJ0ejdyazh6bXdobGxjenciCgoKY29udGV4dHM6Ci0gbmFtZTogInNwcm91ZC1kZXYiCiAgY29udGV4dDoKICAgIHVzZXI6ICJzcHJvdWQtZGV2IgogICAgY2x1c3RlcjogInNwcm91ZC1kZXYiCgpjdXJyZW50LWNvbnRleHQ6ICJzcHJvdWQtZGV2Igo=
+## ⭐ Install **sproud.** for development
+For local development you need to clone this repository `(getsproud/local)` and run the following commands. *No worries, OS detection is inside the Makefile*
+```
+make install
+make projects
+```
+
+## 🚀 Starting **sproud.** for local development
+To spin up an development enviroment do folling steps.
+
+- create new branch *[feature/123-foo-bar]*
+- run `make develop PROJECT=foo-bar`
+
+  *foo-bar must be a project folder withour the **sproud-** prefix*
+- start coding 🤩
+
+
+## 🤖 **sproud.** Make
+What other commands is the Makefile capable of
+
+**setup required cli tools**
+
+```
+make install
+```
+
+**start feature environment on cluster**
+
+```
+make develop PROJECT=foo
+```
+
+**setup sproud. all projects/microservices**
+
+```
+make projects
+```
+
+**setup sproud. single project/microservice**
+
+```
+make project PROJECT=foo
+```
+
+**setup sproud. utils (docs, toolbelt, ...)**
+
+```
+make utils
+```
+
+**show sproud. make help**
+
+```
+make help
+```
